@@ -31,11 +31,18 @@ services:
       start_period: 40s
 
   caddy:
-    image: caddy:2-alpine
+    #image: caddy:2-alpine
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM caddy:alpine
+        COPY caddy-docker.Caddyfile /etc/caddy/Caddyfile
+    # ... (ส่วนอื่นเหมือนเดิม เช่น ports, networks)
+    # ลบ - ./caddy-docker.Caddyfile:/etc/caddy/Caddyfile ออกจาก volumes ด้วย
     ports:
       - "3334:80"
-    volumes:
-      - ./caddy-docker.Caddyfile:/etc/caddy/Caddyfile:ro
+    #volumes:
+      #- ./caddy-docker.Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
       sml-gateway:
         condition: service_healthy
